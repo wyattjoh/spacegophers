@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"math"
 	"math/rand"
 	"time"
@@ -30,10 +31,35 @@ type BoundingBox struct {
 	Max, Min Coordinates
 }
 
+func Round(n float64) int64 {
+	if n < 0 {
+		return int64(math.Ceil(n - 0.5))
+	}
+	return int64(math.Floor(n + 0.5))
+}
+
+func Bind(n, max int64) int64 {
+	return n % max
+}
+
+func BoolToInt(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
+}
+
 // Coordinates stores float64 x, y data.
 type Coordinates struct {
 	X float64 `json:"x"`
 	Y float64 `json:"y"`
+}
+
+func (c Coordinates) MarshalJSON() ([]byte, error) {
+	return json.Marshal([]int64{
+		Bind(Round(c.X), boardSize),
+		Bind(Round(c.Y), boardSize),
+	})
 }
 
 // Inside returns true if the coordinate is within the bounding box.
@@ -71,9 +97,16 @@ type Entity struct {
 	Velocity Coordinates   `json:"v"`
 	Angle    float64       `json:"a"`
 	Updates  CommandUpdate `json:"-"`
-	Updated  CommandUpdate `json:"u"`
+	Updated  CommandUpdate `json:"-"`
 	Size     float64       `json:"-"`
 	thrust   float64
+}
+
+func (e Entity) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"p": e.Position,
+		"a": Round(e.Angle * 180.0 / math.Pi),
+	})
 }
 
 // Process takes a command and flips the flag.

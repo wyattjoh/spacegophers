@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"encoding/json"
+	"math"
+	"time"
+)
 
 const (
 	halfGopherSize = DefaultGopherSize / 2
@@ -60,6 +64,17 @@ type Gopher struct {
 	NoShotsFor uint64 `json:"-"`
 }
 
+func (g Gopher) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"i":  g.UserID,
+		"p":  g.Position,
+		"a":  Round(g.Angle * 180.0 / math.Pi),
+		"s":  BoolToInt(g.Alive),
+		"t":  g.Points,
+		"ns": BoolToInt(g.NoShots),
+	})
+}
+
 // Shoot starts a timer for the the shots, and ensures that no shots can be sent
 // until the timeout is reached again.
 func (g *Gopher) Shoot() {
@@ -81,6 +96,8 @@ func (g *Gopher) MaybeShootAgain() {
 func (g *Gopher) Kill() {
 	g.Alive = false
 	g.DeadFor = uint64(deadTimeout)
+	g.Velocity.X = 0.0
+	g.Velocity.Y = 0.0
 }
 
 // MaybeResurrect will decrement the dead lifecycle count and if it is zero, it
@@ -90,6 +107,7 @@ func (g *Gopher) MaybeResurrect() {
 
 	if g.DeadFor <= 0 {
 		g.Alive = true
+		g.Position = RandomCoordinates(boardSize)
 	}
 }
 

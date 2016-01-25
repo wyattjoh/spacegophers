@@ -64,9 +64,9 @@ func (g *Game) Run() {
 			// start the user's handler
 			go user.run()
 
-			initPl := map[string]string{
-				"type": "init",
-				"i":    user.ID,
+			initPl := map[string]interface{}{
+				"t": 0,
+				"i": user.ID,
 			}
 
 			pl, err := json.Marshal(initPl)
@@ -109,9 +109,9 @@ func (g *Game) Run() {
 			}
 
 			pl, err := json.Marshal(map[string]interface{}{
-				"type":    "state",
-				"gophers": gophers,
-				"shots":   shots,
+				"t": 1,
+				"g": gophers,
+				"s": shots,
 			})
 			if err != nil {
 				g.Log.WithError(err).Debug("could not marshal game state payload")

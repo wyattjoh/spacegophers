@@ -61,10 +61,10 @@ $(document).ready(function() {
   };
 
   Gopher.prototype.update = function(deets) {
-    this.velocity = deets.v;
-    this.shape.rotation = deets.a * 180/3.14159265 + 90;
-    this.shape.x = deets.p.x;
-    this.shape.y = deets.p.y;
+    // this.velocity = deets.v;
+    this.shape.rotation = deets.a + 90;
+    this.shape.x = deets.p[0];
+    this.shape.y = deets.p[1];
     this.points = deets.t;
     this.ns = deets.ns;
 
@@ -129,10 +129,9 @@ $(document).ready(function() {
   };
 
   Shot.prototype.update = function(deets) {
-    this.velocity = deets.v;
-    this.shape.rotation = deets.a * 180/3.14159265 + 90;
-    this.shape.x = deets.p.x;
-    this.shape.y = deets.p.y;
+    this.shape.rotation = deets.a + 90;
+    this.shape.x = deets.p[0];
+    this.shape.y = deets.p[1];
   };
 
   var Game = function(id, queue) {
@@ -176,13 +175,13 @@ $(document).ready(function() {
   Game.prototype.updateState = function(state) {
     var self = this;
 
-    if (!self.state) {
+    if (!state) {
       return;
     }
 
     var gopher, shot, current_gophers = {}, current_shots = {};
 
-    state.shots.forEach(function(shotState) {
+    state.s.forEach(function(shotState) {
       current_shots[shotState.i] = true;
 
       if (shotState.i in self.shots) {
@@ -202,7 +201,7 @@ $(document).ready(function() {
       }
     });
 
-    state.gophers.forEach(function(gopherState, place) {
+    state.g.forEach(function(gopherState, place) {
       current_gophers[gopherState.i] = true;
 
       if (gopherState.i == self.usergopherid) {
@@ -324,6 +323,8 @@ $(document).ready(function() {
     self.space.tileH = self.spaceImg.height;
   	self.space.tileW = self.spaceImg.width;
 
+    console.log(self.space.tileW);
+
     // resize the stage
     self.resize(self)();
 
@@ -358,13 +359,10 @@ $(document).ready(function() {
     self.ws.onmessage = function(evt) {
       var pl = JSON.parse(evt.data);
 
-      switch (pl.type) {
-        case 'init':
-          self.usergopherid = pl.i;
-          break;
-        case 'state':
-          self.state = pl;
-          break;
+      if (pl.t) {
+        self.state = pl;
+      } else {
+        self.usergopherid = pl.i;
       }
     };
   };
@@ -403,7 +401,7 @@ $(document).ready(function() {
 
     Object.keys(self.commands).forEach(function(command) {
       if (self.commands[command]) {
-        self.ws.send(command);
+        self.ws.send(command[0]);
       }
     });
   };

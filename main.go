@@ -15,7 +15,8 @@ const (
 	// DefaultGopherSize is the size in px for the width and height of the gopher.
 	DefaultGopherSize = 50
 
-	boardSize = 300
+	tileSize  = 500
+	boardSize = tileSize * 6
 
 	// the static file to load
 	tpl = "index.html"
