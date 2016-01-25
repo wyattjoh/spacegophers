@@ -304,7 +304,7 @@ $(document).ready(function() {
     DOM.loading.fadeOut(1500);
 
     // play the background music
-    self.background_music = createjs.Sound.play("ambience", 0, 0, -1);
+    self.background_music = createjs.Sound.play("ambience", 0, 0, 0, -1);
 
     if (SHOW_FPS) {
       self.meter = new FPSMeter({
