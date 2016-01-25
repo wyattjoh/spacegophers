@@ -68,7 +68,7 @@ func (g Gopher) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
 		"i":  g.UserID,
 		"p":  g.Position,
-		"a":  Round(g.Angle * 180.0 / math.Pi),
+		"a":  Round(g.Angle*180.0/math.Pi) % 360,
 		"s":  BoolToInt(g.Alive),
 		"t":  g.Points,
 		"ns": BoolToInt(g.NoShots),

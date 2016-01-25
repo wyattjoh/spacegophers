@@ -50,7 +50,7 @@ func (s Shot) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
 		"i": s.ID,
 		"p": s.Position,
-		"a": Round(s.Angle * 180.0 / math.Pi),
+		"a": Round(s.Angle*180.0/math.Pi) % 360,
 		"g": s.Gopher,
 	})
 }
