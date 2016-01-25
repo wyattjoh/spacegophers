@@ -20,7 +20,7 @@ $(document).ready(function() {
     this.id = deets.i;
 
     this.isPlayer = isPlayer;
-    this.isDead = false;
+    this.state = deets.s;
     this.shape = new createjs.Sprite();
     this.game = game;
 
@@ -68,11 +68,16 @@ $(document).ready(function() {
     this.points = deets.t;
     this.ns = deets.ns;
 
+    if (this.state != deets.s) {
+      if (deets.s) {
+        this.shape.gotoAndStop("static");
+      } else {
+        this.shape.gotoAndStop("dead");
+      }
+    }
+
     // check if gopher is alive?
     if (deets.s) {
-      // it is alive!
-      this.isDead = false;
-      this.shape.gotoAndStop("static");
       if (this.isPlayer){
         if (this.game.commands.up !== undefined && this.game.commands.up == true) {
           if (this.game.commands.left !== undefined && this.game.commands.left == true) {
@@ -102,10 +107,9 @@ $(document).ready(function() {
           this.shape.gotoAndPlay("left");
         }
       }
-    } else {
-      this.shape.gotoAndStop("dead");
-      // this.shape.opacity = 0.3;
     }
+
+    this.state = deets.s;
   };
 
   var Shot = function(game, deets) {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"math"
 	"time"
 
@@ -43,6 +44,15 @@ type Shot struct {
 	User       *User  `json:"-"`
 	Lifecycles int64  `json:"-"`
 	Entity
+}
+
+func (s Shot) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"i": s.ID,
+		"p": s.Position,
+		"a": Round(s.Angle * 180.0 / math.Pi),
+		"g": s.Gopher,
+	})
 }
 
 // IsAlive will return true if the shot is still active.

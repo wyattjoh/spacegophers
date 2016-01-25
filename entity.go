@@ -102,13 +102,6 @@ type Entity struct {
 	thrust   float64
 }
 
-func (e Entity) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]interface{}{
-		"p": e.Position,
-		"a": Round(e.Angle * 180.0 / math.Pi),
-	})
-}
-
 // Process takes a command and flips the flag.
 func (e *Entity) Process(command Command) {
 	switch command.Message {
