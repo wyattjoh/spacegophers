@@ -1,6 +1,6 @@
 # Space Gophers
 
-![Space Gophers Screenshot]https://github.com/wyattjoh/spacegophers/raw/master/src/screenshot.png "Space Gophers Screenshot")
+![Space Gophers Screenshot]https://raw.githubusercontent.com/wyattjoh/spacegophers/master/screenshot.png)
 
 Space Gophers is an experiment in using Go routines and WebSockets to calculate complex physics and character/enemy movement server side. The Frontend is implemented with a basic [CreateJS](http://www.createjs.com/) canvas interface and does absolutely _no_ calculations other than managing objects in the canvas. It is entirely a server-side state object, rendered to the canvas.
 
